@@ -31,11 +31,11 @@
         addSample(datum) {
             var fdatum;
             fdatum = this.mLPFilter.addSample(datum);// Low pass filter data.
-            console.log("LPFilter: " + fdatum);
+            //console.log("LPFilter: " + fdatum);
             fdatum = this.mHPFilter.addSample(fdatum);// High pass filter data.
-            console.log("HPFilter: " + fdatum);
+            //console.log("HPFilter: " + fdatum);
             fdatum = this.mDeriv.addSample(fdatum);// Take the derivative.
-            console.log("Deriv: " + fdatum);
+            //console.log("Deriv: " + fdatum);
             fdatum = Math.abs(fdatum);// Take the absolute value.
             fdatum = this.mMWIntegrator.addSample(fdatum);// Average over an 80 ms window .
             return (fdatum);

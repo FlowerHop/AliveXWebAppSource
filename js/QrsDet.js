@@ -59,7 +59,7 @@
         this.mTempPeak = "";
 
         this.mQRSFilter = new QRSFilterManager();
-        this.mDeriv1 = new DerivManager();//done
+        this.mDeriv1 = new DerivManager();
         this.mMainsFilter = new MainsFilterManager();
         this.init();
     }
@@ -80,7 +80,7 @@
 
             // initialize derivative buffer
             for(var i=0;i<this.DER_DELAY;i++) {
-        	    this.mDDBuffer[i] = 0;
+                this.mDDBuffer[i] = 0;
             }
         },
         setMainsFrequency(freq) {
@@ -93,9 +93,9 @@
 
             // Filter data
             mfdatum = Math.floor(this.mMainsFilter.filter(datum));
-            console.log("mfdatum = " + mfdatum);
+            //console.log("mfdatum = " + mfdatum);
             fdatum = this.mQRSFilter.addSample(mfdatum);
-            console.log("fdatum = " + fdatum);
+            //console.log("fdatum = " + fdatum);
             // Wait until normal detector is ready before calling early detections.
             aPeak = this.peakHeight(fdatum, 0);
             if (aPeak < this.MIN_PEAK_AMP) {
@@ -151,18 +151,18 @@
                     this.mInitMax = 0;
                     ++this.mQpkcnt;
 
-        			// Mod so that detection is faster at starting
-        			if(this.mQpkcnt == 2)
-        			{
-        				this.mQpkcnt = 8;
-        				this.mQMean = (this.mQrsBuf[0] + this.mQrsBuf[1]) / 2;
-        				this.mQrsBuf[2] = this.mQrsBuf[4] = this.mQrsBuf[6] = this.mQrsBuf[0];
-        				this.mQrsBuf[3] = this.mQrsBuf[5] = this.mQrsBuf[7] = this.mQrsBuf[1];
-        				this.mNMean = 0 ;
-        				this.mRRMean = this.MS1000 ;
-        				this.mSBCount = this.MS1500+this.MS150 ;
-        				this.mDetThresh = this.thresh(this.mQMean, this.mNMean) ;
-        			}
+                    // Mod so that detection is faster at starting
+                    if(this.mQpkcnt == 2)
+                    {
+                        this.mQpkcnt = 8;
+                        this.mQMean = (this.mQrsBuf[0] + this.mQrsBuf[1]) / 2;
+                        this.mQrsBuf[2] = this.mQrsBuf[4] = this.mQrsBuf[6] = this.mQrsBuf[0];
+                        this.mQrsBuf[3] = this.mQrsBuf[5] = this.mQrsBuf[7] = this.mQrsBuf[1];
+                        this.mNMean = 0 ;
+                        this.mRRMean = this.MS1000 ;
+                        this.mSBCount = this.MS1500+this.MS150 ;
+                        this.mDetThresh = this.thresh(this.mQMean, this.mNMean) ;
+                    }
                 }
                 if (newPeak > this.mInitMax) {
                     this.mInitMax = newPeak;
@@ -171,35 +171,35 @@
                 ++this.mCount;
                 if (newPeak > 0) {
 
-                	// Check for maximum derivative and matching minima and maxima
+                    // Check for maximum derivative and matching minima and maxima
                     // for T-wave and baseline shift rejection.  Only consider this
                     // peak if it doesn't seem to be a base line shift.
 
                     if (this.baselineShiftCheck(this.mDDBuffer, this.mDDPtr) == 0) {
-        				this.mDelay = this.WINDOW_WIDTH + this.mDly ;
+                        this.mDelay = this.WINDOW_WIDTH + this.mDly ;
 
 
-        				// If a peak occurs within 360 ms of the last beat it might be a T-wave.
-        				// Classify it as noise if its maximum derivative
-        				// is less than 1/2 the maximum derivative in the last detected beat.
+                        // If a peak occurs within 360 ms of the last beat it might be a T-wave.
+                        // Classify it as noise if its maximum derivative
+                        // is less than 1/2 the maximum derivative in the last detected beat.
 
-        				if((this.mMaxDer < (this.mLastMax/2)) // less than one third
-        					&& ((this.mCount - this.mDelay) < this.MS360))
-        				{ // store the new peak as noise and go on
-        					this.shiftArrayValues(this.mNoiseBuf);
-        					this.mNoiseBuf[0] = newPeak ;
-        					this.mNMean = this.mean(this.mNoiseBuf,8) ;
-        					this.mDetThresh = this.thresh(this.mQMean,this.mNMean) ;
-        				}
-        				// Classify the beat as a QRS complex
-        				// if it has been at least 360 ms since the last detection
-        				// or the maximum derivative was large enough, and the
-        				// peak is larger than the detection threshold.
+                        if((this.mMaxDer < (this.mLastMax/2)) // less than one third
+                            && ((this.mCount - this.mDelay) < this.MS360))
+                        { // store the new peak as noise and go on
+                            this.shiftArrayValues(this.mNoiseBuf);
+                            this.mNoiseBuf[0] = newPeak ;
+                            this.mNMean = this.mean(this.mNoiseBuf,8) ;
+                            this.mDetThresh = this.thresh(this.mQMean,this.mNMean) ;
+                        }
+                        // Classify the beat as a QRS complex
+                        // if it has been at least 360 ms since the last detection
+                        // or the maximum derivative was large enough, and the
+                        // peak is larger than the detection threshold.
 
                         // Classify the beat as a QRS complex
                         // if the peak is larger than the detection threshold.
 
-        				else if (newPeak > this.mDetThresh) {
+                        else if (newPeak > this.mDetThresh) {
                             this.shiftArrayValues(this.mQrsBuf);
                             this.mQrsBuf[0] = newPeak;
                             this.mQMean = this.mean(this.mQrsBuf, 8);
@@ -287,7 +287,7 @@
             }
 
             if(qrsDelay>0) {
-            	qrsDelay += this.mMainsFilter.getDelay();
+                qrsDelay += this.mMainsFilter.getDelay();
             }
             return (qrsDelay);
         },

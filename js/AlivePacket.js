@@ -61,7 +61,7 @@
             return this.mPrevSeqNum;
         },
         getInfo() {
-            return this.mInfo;
+            return this.mInfo[0];
         },
         getECGLength() {
             return this.mECGLength;
@@ -70,10 +70,10 @@
             return this.mECGDataIndex;
         },
         getECGID() {
-            return this.mECGID;
+            return this.mECGID[0];
         },
         getECGDataFormat() {
-            return this.mECGFormat;
+            return this.mECGFormat[0];
         },
         getECGSamplingRate() {
             return (300);
@@ -85,10 +85,10 @@
             return this.mAccDataIndex;
         },
         getAccID() {
-            return this.mAccID;
+            return this.mAccID[0];
         },
         getAccDataFormat() {
-            return this.mAccFormat;
+            return this.mAccFormat[0];
         },
         getAccChannels() {
             return this.mAccChannels;
@@ -157,7 +157,7 @@
                       this.mChannelByteCount = 0;
 
                       // Packet length:
-                      //	6  byte main header
+                      //    6  byte main header
                       //  n1 bytes in channel 1
                       //  n2 bytes in channel 2
                       //  ...
@@ -218,6 +218,7 @@
                           this.mECGDataIndex = this.mPacketBytes - this.mECGLength;
                       } else if (this.mChannelType == tmp[1]) { // 0x56
                           // Acc 3 channel data packet
+                          //console.log("Acc 3 channel data packet");
                           this.mAccID = this.mChannelType;
                           this.mAccChannels = 3;
                           this.mAccFormat[0] = this.mChannelFormat;
@@ -238,7 +239,7 @@
                   }
                   break;
               case this.ESTATE_CHECKSUM:
-              console.log("mState == ESTATE_CHECKSUM");
+              //console.log("mState == ESTATE_CHECKSUM");
                   if (ucData[0] == this.mPacketCheckSum[0]) {
                       this.mState = this.ESTATE_SYNC;
                       this.mPacketBytes = 0;

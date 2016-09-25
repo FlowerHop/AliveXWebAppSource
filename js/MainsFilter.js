@@ -3,12 +3,10 @@
 // Simple averaging LP Filter that also removes 50Hz or 60Hz AC Mains noise from ECG.
 (function (exports) {
     var MainsFilterManager = function() {
-        this.mInit = true;
         this.mD = new Array(6);
-	    this.mIndex;
-	    this.mCount;
+        this.mCount;
 
-        this.setMainsFrequency(60);
+        this.setMainsFrequency(50);
         this.mInit = true;
         this.mIndex = 0;
     }
@@ -18,6 +16,7 @@
         },
         filter(val) {
             if(this.mInit==true) {
+                //console.log("MainsFilter: mCount = " + this.mCount);
                 this.mIndex=0;
                 for(var i=0;i<this.mCount;i++) {
                     this.mD[i] = val;
@@ -29,7 +28,7 @@
             this.mD[this.mIndex] = val;
             var sum = 0.0;
             for(var i=0;i<this.mCount;i++) sum += this.mD[i];
-
+            //console.log(this.mD);
             var avg = sum/this.mCount;
             this.mIndex++;
             if(this.mIndex==this.mCount) this.mIndex=0;

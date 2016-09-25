@@ -9,7 +9,7 @@
         this.contextHR = "";
         this.contextHRUnits = "";
 
-        this.hrString = "68";
+        this.hrString = "---";
     }
     HeartBeatManager.prototype = {
         init() {
@@ -27,29 +27,30 @@
         onMeasure() {
             this.mHR.width = window.innerWidth / 4;
             this.mHR.height = window.innerHeight / 4;
-            this.contextHR.font = "30px Georgia";
-            this.contextHR.fillText(this.hrString, this.mHR.width/8, this.mHR.height/2);
+            this.contextHR.font = "20px sans-serif";
+            this.contextHR.fillText(this.hrString, this.mHR.width/4, this.mHR.height/2);
 
             this.mHRUnits.width = window.innerWidth / 4;
             this.mHRUnits.height = window.innerHeight / 4;
-            this.contextHRUnits.font = "30px Georgia";
+            this.contextHRUnits.font = "20px sans-serif";
             this.contextHRUnits.fillText("BPM", this.mHR.width/4, this.mHR.height/2);
         },
         updateHeartRate(hr) {
             var hrString;
             if (hr == 0) {
-    			hrString = "---";
-    		} else {
-    			hrString = hr;
-    		}
-        	if(this.hrString != hrString) {
+                hrString = "---";
+            } else {
+                hrString = hr;
+            }
+            if(this.hrString != hrString) {
                 this.hrString = hrString;
+                this.onMeasure();
                 this.contextHR.fillText(this.hrString, this.mHR.width/8, this.mHR.height/2);
             }
-        	/*if(mHR.getVisibility() != View.VISIBLE) {
-        		mHR.setVisibility(View.VISIBLE);
-        		mHRUnits.setVisibility(View.VISIBLE);
-        	}*/
+            /*if(mHR.getVisibility() != View.VISIBLE) {
+                mHR.setVisibility(View.VISIBLE);
+                mHRUnits.setVisibility(View.VISIBLE);
+            }*/
         },
         onAliveHeartBeat(timeSampleCount, hr, rrSamples) {
             this.updateHeartRate(Math.floor(hr+0.5));

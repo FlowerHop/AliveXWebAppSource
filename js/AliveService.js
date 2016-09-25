@@ -54,17 +54,17 @@
                 tmp[0] = 0xFF;
                 for(var i = 0; i < len; i++) {
                     var nDatum = (buffer[startIndex+i] & tmp[0]);
-                    console.log("nDatum = " + nDatum);
+                    //console.log("nDatum = " + nDatum);
                     var nDelay = this.mHRDet.process(nDatum);
-				    if(nDelay!=0) {
-                        //Update the heart-rate in the UI thread
+                    if(nDelay!=0) {
+                        //Update the heart-rate in the UI
                         console.log("Update the heart rate");
                         this.mHeartBeat.onAliveHeartBeat(
                             this.sampleCount+i+1-nDelay,
                             this.mHRDet.getHR(),
                             this.mHRDet.getLastRR()
                         );
-				    }
+                    }
                 }
                 this.sampleCount += len;
                 console.log("sampleCount = " + this.sampleCount);

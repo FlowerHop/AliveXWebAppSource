@@ -26,7 +26,7 @@
 
             y = x - this.mDerBuff[this.mDerI];
             this.mDerBuff[this.mDerI] = x;
-            console.log("DERIV_LENGTH = " + this.DERIV_LENGTH);
+            //console.log("DERIV_LENGTH = " + this.DERIV_LENGTH);
             if (++this.mDerI == this.DERIV_LENGTH) {
                 this.mDerI = 0;
             }

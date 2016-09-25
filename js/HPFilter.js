@@ -29,7 +29,7 @@
             var z;
             var halfPtr;
             this.mY += datum - this.mBuffer[this.mIndex];
-            console.log("HPBUFFER_LGTH = " + this.HPBUFFER_LGTH);
+            //console.log("HPBUFFER_LGTH = " + this.HPBUFFER_LGTH);
             halfPtr = this.mIndex - (this.HPBUFFER_LGTH / 2);
             if (halfPtr < 0) {
                 halfPtr += this.HPBUFFER_LGTH;

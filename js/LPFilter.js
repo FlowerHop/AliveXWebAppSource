@@ -31,7 +31,7 @@
             var output;
             var halfPtr;
 
-            console.log("LPBUFFER_LGTH = " + this.LPBUFFER_LGTH);
+            //console.log("LPBUFFER_LGTH = " + this.LPBUFFER_LGTH);
             halfPtr = this.mIndex - (this.LPBUFFER_LGTH / 2); // Use halfPtr to index
             if (halfPtr < 0) // to x[n-6].
             {
