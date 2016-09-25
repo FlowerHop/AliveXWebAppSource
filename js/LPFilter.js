@@ -10,11 +10,11 @@
 **************************************************************************/
 (function (exports) {
     var LPFilterManager = function() {
-        var MS25 = Math.round(25 / (1000 / 300) + 0.5);
-        this.LPBUFFER_LGTH = Math.round(2 * MS25);
+        var MS25 = Math.floor(25 / (1000 / 300) + 0.5);
+        this.LPBUFFER_LGTH = Math.floor(2 * MS25);
         this.mY1 = 0;
         this.mY2 = 0;
-        this.mBuffer = [this.LPBUFFER_LGTH];
+        this.mBuffer = new Array(this.LPBUFFER_LGTH);
         this.mIndex = 0;
     }
     LPFilterManager.prototype = {
@@ -31,6 +31,7 @@
             var output;
             var halfPtr;
 
+            console.log("LPBUFFER_LGTH = " + this.LPBUFFER_LGTH);
             halfPtr = this.mIndex - (this.LPBUFFER_LGTH / 2); // Use halfPtr to index
             if (halfPtr < 0) // to x[n-6].
             {
@@ -39,11 +40,11 @@
             y0 = (this.mY1 << 1) - this.mY2 + datum - (this.mBuffer[halfPtr] << 1) + this.mBuffer[this.mIndex];
             this.mY2 = this.mY1;
             this.mY1 = y0;
-            output = Math.round(y0 / ((this.LPBUFFER_LGTH * this.LPBUFFER_LGTH) / 4));
-            this.mBuffer[this.mIndex] = datum;           // Stick most recent sample into
-            if (++this.mIndex == this.LPBUFFER_LGTH) // the circular buffer and update
+            output = Math.floor(y0 / ((this.LPBUFFER_LGTH * this.LPBUFFER_LGTH) / 4));
+            this.mBuffer[this.mIndex] = datum;// Stick most recent sample into
+            if (++this.mIndex == this.LPBUFFER_LGTH)// the circular buffer and update
             {
-                this.mIndex = 0;                 // the buffer pointer.
+                this.mIndex = 0;// the buffer pointer.
             }
             return (output);
         }

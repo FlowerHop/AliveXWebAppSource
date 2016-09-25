@@ -4,12 +4,12 @@
 (function (exports) {
     var MainsFilterManager = function() {
         this.mInit = true;
-        this.mD = [6];
+        this.mD = new Array(6);
 	    this.mIndex;
 	    this.mCount;
 
-        this.setMainsFrequency(50);
-        this.mInit=true;
+        this.setMainsFrequency(60);
+        this.mInit = true;
         this.mIndex = 0;
     }
     MainsFilterManager.prototype = {

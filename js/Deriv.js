@@ -9,14 +9,14 @@
 *****************************************************************************/
 (function (exports) {
     var DerivManager = function() {
-        var MS10 = Math.round(10 / (1000 / 300) + 0.5);
+        var MS10 = Math.floor(10 / (1000 / 300) + 0.5);
         this.DERIV_LENGTH = MS10;
-        this.mDerBuff = [this.DERIV_LENGTH];
+        this.mDerBuff = new Array(this.DERIV_LENGTH);
         this.mDerI = 0;
     }
     DerivManager.prototype = {
         init() {
-            for (this.mDerI = 0; this.mDerI < this.DERIV_LENGTH; ++mDerI) {
+            for (this.mDerI = 0; this.mDerI < this.DERIV_LENGTH; ++this.mDerI) {
                 this.mDerBuff[this.mDerI] = 0;
             }
             this.mDerI = 0;
@@ -26,6 +26,7 @@
 
             y = x - this.mDerBuff[this.mDerI];
             this.mDerBuff[this.mDerI] = x;
+            console.log("DERIV_LENGTH = " + this.DERIV_LENGTH);
             if (++this.mDerI == this.DERIV_LENGTH) {
                 this.mDerI = 0;
             }

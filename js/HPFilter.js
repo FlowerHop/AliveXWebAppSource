@@ -10,10 +10,10 @@
 ******************************************************************************/
 (function (exports) {
     var HPFilterManager = function() {
-        var MS125 = Math.round(125 / (1000 / 300) + 0.5);
+        var MS125 = Math.floor(125 / (1000 / 300) + 0.5);
         this.HPBUFFER_LGTH = MS125;
         this.mY = 0;
-        this.mBuffern = [this.HPBUFFER_LGTH];
+        this.mBuffer = new Array(this.HPBUFFER_LGTH);
         this.mIndex = 0;
     }
     HPFilterManager.prototype = {
@@ -29,11 +29,12 @@
             var z;
             var halfPtr;
             this.mY += datum - this.mBuffer[this.mIndex];
+            console.log("HPBUFFER_LGTH = " + this.HPBUFFER_LGTH);
             halfPtr = this.mIndex - (this.HPBUFFER_LGTH / 2);
             if (halfPtr < 0) {
                 halfPtr += this.HPBUFFER_LGTH;
             }
-            z = this.mBuffer[halfPtr] - Math.round(this.mY / this.HPBUFFER_LGTH);
+            z = this.mBuffer[halfPtr] - Math.floor(this.mY / this.HPBUFFER_LGTH);
 
             this.mBuffer[this.mIndex] = datum;
             if (++this.mIndex == this.HPBUFFER_LGTH) {

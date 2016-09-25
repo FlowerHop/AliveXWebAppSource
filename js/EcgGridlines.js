@@ -8,10 +8,9 @@
   }
   EcgGridlinesManager.prototype = {
       start() {
-          this.canvas = document.getElementById("mycanvas");
+          this.canvas = document.getElementById("gridlines");
           this.context = this.canvas.getContext("2d");
-          var obj = this;
-          //console.log("first time");
+
           window.addEventListener('resize', this.resizeCanvas.bind(this), false);
           this.resizeCanvas();
       },

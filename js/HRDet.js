@@ -14,24 +14,24 @@
         this.mADCUnit = ""; // ADC units per mV
         this.mADCZero = ""; // ADC zero level
         this.mSampleRate = ""; // ECG sampling rate
-        this.mSampleCount = 0;
-
-        this.mCurrQRSSample = 0;
-        this.mPrevQRSSample = 0;
+        this.mSampleCount = "";
+        this.mCurrQRSSample = "";
+        this.mPrevQRSSample = "";
         this.mLastHRUpdateSample = "";
+        
         this.mHeartRate = ""; // Heart Rate measurement calculated over 5sec  window
   	    this.mCurrRR = ""; // The last RR interval in samples
   	    this.mCurrHR = "";; // Current Instantaneous HR
   	    this.mPrevHR = "";; // Previous HR
-  	    this.mTrimMeanSort = (this.HISTORYBUFFER_LENGTH);
+  	    this.mTrimMeanSort = new Array(this.HISTORYBUFFER_LENGTH);
         this.mQrsDet = new QrsDetManager();
 
-        this.mRRInterval = (this.MEDIAN_WINDOW_LENGTH);
+        this.mRRInterval = new Array(this.MEDIAN_WINDOW_LENGTH);
   	    this.mRRIntervalCount = "";
   	    this.mRRIndex = "";
 
-        this.mRRIntervalHistory = (this.HISTORYBUFFER_LENGTH);
-    	this.mQrsSampleHistory = (this.HISTORYBUFFER_LENGTH);
+        this.mRRIntervalHistory = new Array(this.HISTORYBUFFER_LENGTH);
+    	this.mQrsSampleHistory = new Array(this.HISTORYBUFFER_LENGTH);
     	this.mHistoryCount = 0;
 
         // Constructor
@@ -39,7 +39,7 @@
         this.mSampleRate = this.mQrsDet.SAMPLE_RATE; // 300Hz (OESA beat detector assumes 300Hz)
         this.mADCUnit = 50;  // 50 units per mV
         this.mADCZero = 128; // 128. (8bit unsigned data, where 128 = 0mV)
-        this.reset();
+        this.reset(0);
     }
     HRDetManager.prototype = {
         getLastRR() {
@@ -48,9 +48,9 @@
         getHR() {
             return this.mHeartRate;
         },
-        reset() {
+        /*reset() {
             reset(0);
-        },
+        },*/
         reset(sampleCount) {
             this.mSampleCount = sampleCount;
             if (this.mSampleCount == 0) {
@@ -88,46 +88,47 @@
   		    }
 
   		    // Pass ECG sample to beat detector
+            console.log("ecgSample: " + ecgSample);
   		    delay = this.mQrsDet.process(ecgSample);
-
+            console.log("QrsDet detector: " + delay);
   		    // Beat was detected
   		    if (delay != 0) {
   			    this.mCurrQRSSample = this.mSampleCount - delay;
 
   			    if (this.mPrevQRSSample != 0) {
                     this.mCurrRR = this.mCurrQRSSample - this.mPrevQRSSample;
-  				    this.mCurrHR = this.mSampleRate * 60. / this.mCurrRR;
+  				    this.mCurrHR = this.mSampleRate * 60 / this.mCurrRR;
 
   				    this.mRRIntervalCount++;
   				    this.mRRInterval[this.mRRIndex++] = this.mCurrRR;
-                    if (this.mRRIndex >= MEDIAN_WINDOW_LENGTH) {
+                    if (this.mRRIndex >= this.MEDIAN_WINDOW_LENGTH) {
                         this.mRRIndex = 0;
                     }
 
   				    // Robust RR interval measurement using the trimmed mid mean
-  				    var midMeanRR = trimMean(this.mRRInterval, Math.min(this.mRRIntervalCount, MEDIAN_WINDOW_LENGTH), 2);
+  				    var midMeanRR = this.trimMean(this.mRRInterval, Math.min(this.mRRIntervalCount, this.MEDIAN_WINDOW_LENGTH), 2);
 
   				    // Ignore intervals outside HR limits
-  				    if (this.mCurrHR <= (MAX_HR+0.5) && this.mCurrHR >= (MIN_HR-0.5)) {
-  					    var midMeanHR = this.mSampleRate * 60. / midMeanRR;
+  				    if (this.mCurrHR <= (this.MAX_HR+0.5) && this.mCurrHR >= (this.MIN_HR-0.5)) {
+  					    var midMeanHR = this.mSampleRate * 60 / midMeanRR;
 
 
   					    // Update the current heart rate if change is within tolerance
-  					    if (Math.abs(this.mCurrHR - this.mPrevHR) < HR_TOLERANCE && Math.abs(this.mCurrHR - midMeanHR) < HR_TOLERANCE) {
+  					    if (Math.abs(this.mCurrHR - this.mPrevHR) < this.HR_TOLERANCE && Math.abs(this.mCurrHR - midMeanHR) < this.HR_TOLERANCE) {
   						    this.mLastHRUpdateSample = this.mCurrQRSSample;
-  						    this.mQrsSampleHistory[this.mHistoryCount % HISTORYBUFFER_LENGTH] = this.mCurrQRSSample;
-  						    this.mRRIntervalHistory[this.mHistoryCount % HISTORYBUFFER_LENGTH] = this.mCurrRR;
+  						    this.mQrsSampleHistory[this.mHistoryCount % this.HISTORYBUFFER_LENGTH] = this.mCurrQRSSample;
+  						    this.mRRIntervalHistory[this.mHistoryCount % this.HISTORYBUFFER_LENGTH] = this.mCurrRR;
   						    this.mHistoryCount++;
 
   						    var rrsum = this.mCurrRR;
   						    var intervalCount = 1;
   						    var index = this.mHistoryCount - 2;
-  						    while (index >= 0 && this.mQrsSampleHistory[index % HISTORYBUFFER_LENGTH] >= (this.mCurrQRSSample - HR_AVG_WINDOW_SAMPLES)) {
-  							    rrsum += this.mRRIntervalHistory[index % HISTORYBUFFER_LENGTH];
+  						    while (index >= 0 && this.mQrsSampleHistory[index % this.HISTORYBUFFER_LENGTH] >= (this.mCurrQRSSample - this.HR_AVG_WINDOW_SAMPLES)) {
+  							    rrsum += this.mRRIntervalHistory[index % this.HISTORYBUFFER_LENGTH];
   							    intervalCount++;
   							    index--;
   						    }
-  						    this.mHeartRate = this.mSampleRate * 60. / (rrsum / intervalCount);
+  						    this.mHeartRate = this.mSampleRate * 60 / (rrsum / intervalCount);
   					    }
   					    this.mPrevHR = this.mCurrHR;
   				    }
@@ -150,6 +151,7 @@
   			    this.mHeartRate = 0.;
   		    }
   		    this.mSampleCount++;
+            console.log("delay = " + delay);
   		    return delay;
         },
         // trimMean: Returns a trim mean of an array of int's.
@@ -180,7 +182,7 @@
   			    meanCount = len;
 
   		    // Trim same number from top and bottom of sorted list
-  		    index = (int) ((len - meanCount) >> 1);
+  		    index = Math.floor((len - meanCount) >> 1);
 
   		    // Calculate trimmean.
   		    var sum = 0;

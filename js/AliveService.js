@@ -6,16 +6,22 @@
         this.hmPacket = new AlivePacketManager();
         this.mHRDet = new HRDetManager();
         this.hmPacket.init();
+
+        // initialize UI view
+        this.mEcgView = new EcgViewManager();
+        this.mAccView = new AccViewManager();
+        this.mHeartBeat = new HeartBeatManager();
+        this.mEcgView.init();
+        this.mAccView.init();
+        this.mHeartBeat.init();
     }
     AliveServiceManager.prototype = {
         start() {
             this.mSocket = new WebSocket("ws://127.0.0.1:80");
             this.mSocket.binaryType = "arraybuffer";
-            //console.log(this);
 
             this.mSocket.onopen = function (evt) {
                 console.log("Connection established");
-                //console.log(this);
             }.bind(this);
 
             this.mSocket.onmessage = function (evt) {
@@ -36,27 +42,32 @@
         },
         run(mBytesBuffer) {
             if(this.hmPacket.add(mBytesBuffer)) {
-                //Here we need to use this certain packet to
-                //draw the ecg and the acc
-                //mListener.onAlivePacket(sampleCount, hmPacket);
+                // We have a packet of data from the heart monitor
+                this.mEcgView.onAlivePacket(this.sampleCount, this.hmPacket);
+                this.mAccView.onAlivePacket(this.sampleCount, this.hmPacket);
 
+                // Process the ECG data
                 var len = this.hmPacket.getECGLength();
-                console.log("getECGLength() = " + len);
                 var startIndex = this.hmPacket.getECGDataIndex();
-                console.log("getECGDataIndex() = " + startIndex);
                 var buffer = new Int8Array(this.hmPacket.getPacketData());
-                console.log(buffer[0] + " " + buffer[1] + " " + buffer[2]);
                 var tmp = new Int8Array(1);
                 tmp[0] = 0xFF;
                 for(var i = 0; i < len; i++) {
                     var nDatum = (buffer[startIndex+i] & tmp[0]);
+                    console.log("nDatum = " + nDatum);
                     var nDelay = this.mHRDet.process(nDatum);
 				    if(nDelay!=0) {
-                    //Update the heart-beat in the UI thread
-				    //mListener.onAliveHeartBeat(sampleCount+i+1-nDelay, mHRDet.getHR(), mHRDet.getLastRR());
+                        //Update the heart-rate in the UI thread
+                        console.log("Update the heart rate");
+                        this.mHeartBeat.onAliveHeartBeat(
+                            this.sampleCount+i+1-nDelay,
+                            this.mHRDet.getHR(),
+                            this.mHRDet.getLastRR()
+                        );
 				    }
                 }
                 this.sampleCount += len;
+                console.log("sampleCount = " + this.sampleCount);
             }
         }
     };

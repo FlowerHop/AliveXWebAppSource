@@ -4,21 +4,21 @@
     var QrsDetManager = function() {
         this.SAMPLE_RATE = 300; // Sample rate in Hz
 
-	    this.TAG = "QrsDet";
-        this.MS10 = Math.round(10 / (1000 / this.SAMPLE_RATE) + 0.5);
-        this.MS25 = Math.round(25 / (1000 / this.SAMPLE_RATE) + 0.5);
-        this.MS80 = Math.round(80 / (1000 / this.SAMPLE_RATE) + 0.5);
-        this.MS95 = Math.round(95 / (1000 / this.SAMPLE_RATE) + 0.5);
-        this.MS100 = Math.round(100 / (1000 / this.SAMPLE_RATE) + 0.5);
-        this.MS125 = Math.round(125 / (1000 / this.SAMPLE_RATE) + 0.5);
-        this.MS150 = Math.round(150 / (1000 / this.SAMPLE_RATE) + 0.5);
-        this.MS195 = Math.round(195 / (1000 / this.SAMPLE_RATE) + 0.5);
-        this.MS220 = Math.round(220 / (1000 / this.SAMPLE_RATE) + 0.5);
-        this.MS360 = Math.round(360 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.TAG = "QrsDet";
+        this.MS10 = Math.floor(10 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.MS25 = Math.floor(25 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.MS80 = Math.floor(80 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.MS95 = Math.floor(95 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.MS100 = Math.floor(100 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.MS125 = Math.floor(125 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.MS150 = Math.floor(150 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.MS195 = Math.floor(195 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.MS220 = Math.floor(220 / (1000 / this.SAMPLE_RATE) + 0.5);
+        this.MS360 = Math.floor(360 / (1000 / this.SAMPLE_RATE) + 0.5);
         this.MS1000 = this.SAMPLE_RATE;
-        this.MS1500 = Math.round(1500 / (1000 / this.SAMPLE_RATE));
+        this.MS1500 = Math.floor(1500 / (1000 / this.SAMPLE_RATE));
         this.DERIV_LENGTH = this.MS10;
-        this.LPBUFFER_LGTH = Math.round(2 * this.MS25);
+        this.LPBUFFER_LGTH = Math.floor(2 * this.MS25);
         this.HPBUFFER_LGTH = this.MS125;
         this.PRE_BLANK = this.MS195;
         this.MIN_PEAK_AMP = 7; // Prevents detections of peaks smaller than about 300 uV.
@@ -27,22 +27,22 @@
         this.TH_NUMERATOR = 3125;
         this.TH_DENOMINATOR = 10000;
         this.WINDOW_WIDTH = this.MS80; // Moving window integration width.
-        this.FILTER_DELAY = Math.round((this.DERIV_LENGTH / 2) + (this.LPBUFFER_LGTH / 2 - 1) + ((this.HPBUFFER_LGTH - 1) / 2) + this.PRE_BLANK);  // filter delays plus 200 ms blanking delay
+        this.FILTER_DELAY = Math.floor((this.DERIV_LENGTH / 2) + (this.LPBUFFER_LGTH / 2 - 1) + ((this.HPBUFFER_LGTH - 1) / 2) + this.PRE_BLANK);  // filter delays plus 200 ms blanking delay
         this.DER_DELAY = this.WINDOW_WIDTH + this.FILTER_DELAY + this.MS100; // Variables for peakHeight function
 
         this.mPeakMax = 0;
         this.mPeakTimeSinceMax = 0;
         this.mPeakLastDatum = 0;
-        this.mDDBuffer = [this.DER_DELAY]; // Buffer holding derivative data.
+        this.mDDBuffer = new Array(this.DER_DELAY); // Buffer holding derivative data.
         this.mDly = 0;
         this.mDDPtr;
         this.mDelay = 0;
         this.mDetThresh = "";
         this.mQpkcnt = 0;
-        this.mQrsBuf = [8];
-        this.mNoiseBuf = [8];
-        this.mRRBuf = [8];
-        this.mRsetBuf = [8];
+        this.mQrsBuf = new Array(8);
+        this.mNoiseBuf = new Array(8);
+        this.mRRBuf = new Array(8);
+        this.mRsetBuf = new Array(8);
         this.mRsetCount = 0;
         this.mNMean = "";
         this.mQMean = "";
@@ -69,7 +69,6 @@
                 this.mNoiseBuf[i] = 0; // Initialize noise buffer
                 this.mRRBuf[i] = this.MS1000; // and R-to-R interval buffer.
             }
-
             this.mQpkcnt = this.mMaxDer = this.mLastMax = this.mCount = this.mSBPeak = 0;
             this.mInitBlank = this.mInitMax = this.mPreBlankCnt = this.mDDPtr = 0;
             this.mSBCount = this.MS1500;
@@ -77,7 +76,6 @@
             this.mQRSFilter.init(); // initialise filters
             this.mDeriv1.init();
             this.mMainsFilter.init();
-
             this.peakHeight(0, 1);
 
             // initialize derivative buffer
@@ -86,7 +84,7 @@
             }
         },
         setMainsFrequency(freq) {
-            return mMainsFilter.setMainsFrequency(freq);
+            return this.mMainsFilter.setMainsFrequency(freq);
         },
         process(datum) {
             var mfdatum, fdatum;
@@ -94,11 +92,12 @@
             var i, newPeak, aPeak;
 
             // Filter data
-            mfdatum = Math.round(mMainsFilter.filter(datum));
-            fdatum = mQRSFilter.addSample(mfdatum);
-
+            mfdatum = Math.floor(this.mMainsFilter.filter(datum));
+            console.log("mfdatum = " + mfdatum);
+            fdatum = this.mQRSFilter.addSample(mfdatum);
+            console.log("fdatum = " + fdatum);
             // Wait until normal detector is ready before calling early detections.
-            aPeak = peakHeight(fdatum, 0);
+            aPeak = this.peakHeight(fdatum, 0);
             if (aPeak < this.MIN_PEAK_AMP) {
                 aPeak = 0;
                 // Hold any peak that is detected for 200 ms
@@ -136,8 +135,8 @@
 
             // Save derivative of raw signal for T-wave and baseline shift discrimination.
             this.mDDBuffer[this.mDDPtr] = this.mDeriv1.addSample(mfdatum);
-            if (++this.mDDPtr == DER_DELAY) {
-                this.this.mDDPtr = 0;
+            if (++this.mDDPtr == this.DER_DELAY) {
+                this.mDDPtr = 0;
             }
             // Initialize the qrs peak buffer with the first eight
             // local maximum peaks detected.
@@ -176,7 +175,7 @@
                     // for T-wave and baseline shift rejection.  Only consider this
                     // peak if it doesn't seem to be a base line shift.
 
-                    if (baselineShiftCheck(this.mDDBuffer, this.mDDPtr) == 0) {
+                    if (this.baselineShiftCheck(this.mDDBuffer, this.mDDPtr) == 0) {
         				this.mDelay = this.WINDOW_WIDTH + this.mDly ;
 
 
@@ -185,7 +184,7 @@
         				// is less than 1/2 the maximum derivative in the last detected beat.
 
         				if((this.mMaxDer < (this.mLastMax/2)) // less than one third
-        					&& ((this.mCount - this.mDelay) < MS360))
+        					&& ((this.mCount - this.mDelay) < this.MS360))
         				{ // store the new peak as noise and go on
         					this.shiftArrayValues(this.mNoiseBuf);
         					this.mNoiseBuf[0] = newPeak ;
@@ -201,7 +200,7 @@
                         // if the peak is larger than the detection threshold.
 
         				else if (newPeak > this.mDetThresh) {
-                            shiftArrayValues(this.mQrsBuf);
+                            this.shiftArrayValues(this.mQrsBuf);
                             this.mQrsBuf[0] = newPeak;
                             this.mQMean = this.mean(this.mQrsBuf, 8);
                             this.mDetThresh = this.thresh(this.mQMean, this.mNMean);
@@ -330,18 +329,18 @@
             var sum;
             var i;
 
-            for (i = 0, sum = 0; i < datnum; ++i) {
+            for (i = 0, sum = 0; i < datum; ++i) {
                 sum += array[i];
             }
-            sum /= datnum;
-            return Math.round(sum);
+            sum /= datum;
+            return Math.floor(sum);
         },
         thresh(qmean, nmean) {
             var thrsh;
             var dmed;
 
             dmed = qmean - nmean;
-            dmed = Math.round(dmed * this.TH_NUMERATOR / this.TH_DENOMINATOR);
+            dmed = Math.floor(dmed * this.TH_NUMERATOR / this.TH_DENOMINATOR);
             thrsh = nmean + dmed;
             return (thrsh);
         },

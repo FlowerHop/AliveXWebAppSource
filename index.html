@@ -7,22 +7,39 @@
         <link rel="stylesheet" href="css/app.css">
 
         <script type="text/javascript" src="js/libs/grid.js"></script>
-        <script type="text/javascript" src="js/MainActivity.js" defer></script>
-        <script type="text/javascript" src="js/EcgGridlines.js"></script>
-        <script type="text/javascript" src="js/AlivePacket.js"></script>
-        <script type="text/javascript" src="js/Deriv.js"></script>
-        <script type="text/javascript" src="js/MWIntegrator.js"></script>
-        <script type="text/javascript" src="js/HPFilter.js"></script>
-        <script type="text/javascript" src="js/LPFilter.js"></script>
-        <script type="text/javascript" src="js/QRSFilter.js"></script>
-        <script type="text/javascript" src="js/QrsDet.js"></script>
-        <script type="text/javascript" src="js/MainsFilter.js"></script>
-        <script type="text/javascript" src="js/AliveService.js"></script>
 
+        <script type="text/javascript" src="js/EcgView.js"></script>
+        <script type="text/javascript" src="js/AccView.js"></script>
+
+        <script type="text/javascript" src="js/CirFloatBuffer.js"></script>
+        <script type="text/javascript" src="js/CirByteBuffer.js"></script>
+
+        <script type="text/javascript" src="js/AlivePacket.js"></script>
+        <script type="text/javascript" src="js/HRDet.js"></script>
+
+        <script type="text/javascript" src="js/QrsDet.js"></script>
+        <script type="text/javascript" src="js/QRSFilter.js"></script>
+        <script type="text/javascript" src="js/LPFilter.js"></script>
+        <script type="text/javascript" src="js/HPFilter.js"></script>
+        <script type="text/javascript" src="js/MWIntegrator.js"></script>
+        <script type="text/javascript" src="js/Deriv.js"></script>
+        <script type="text/javascript" src="js/MainsFilter.js"></script>
+
+        <script type="text/javascript" src="js/AliveService.js"></script>
+        <script type="text/javascript" src="js/EcgGridlines.js"></script>
+        <script type="text/javascript" src="js/HeartBeat.js"></script>
+        <script type="text/javascript" src="js/MainActivity.js" defer></script>
     </head>
     <body>
-        <canvas id="mycanvas" style = 'position: absolute; left: 0px; top: 0px;'>
-        </canvas>
-
+        <canvas id="gridlines" style = 'position: absolute; left: 0px; top: 0px;'></canvas>
+        <div id="top">
+            <canvas id="ecgtitle" stytle = 'position: relative;'></canvas>
+            <canvas id="ecghr" stytle = 'position: absolute;'></canvas>
+            <div id="tmp"></div>
+        </div>
+        <div id="down">
+            <canvas id="ecgview" style = 'position: relative;'></canvas>
+            <canvas id="accview" style = 'position: absolute;'></canvas>
+        </div>
     </body>
 </html>
