@@ -7,7 +7,7 @@
         this.mHRDet = new HRDetManager();
         this.hmPacket.init();
 
-        // initialize UI view
+        // Initialize UI view
         this.mEcgView = new EcgViewManager();
         this.mAccView = new AccViewManager();
         this.mHeartBeat = new HeartBeatManager();
@@ -27,7 +27,6 @@
             this.mSocket.onmessage = function (evt) {
                 if (evt.data instanceof ArrayBuffer) {
                     var mBytesBuffer = new Int8Array(evt.data);
-                    //console.log(mBytesBuffer.length);
                     this.run(mBytesBuffer[0]);
                 }
             }.bind(this);
@@ -54,10 +53,9 @@
                 tmp[0] = 0xFF;
                 for(var i = 0; i < len; i++) {
                     var nDatum = (buffer[startIndex+i] & tmp[0]);
-                    //console.log("nDatum = " + nDatum);
                     var nDelay = this.mHRDet.process(nDatum);
                     if(nDelay!=0) {
-                        //Update the heart-rate in the UI
+                        // Update the heart-rate in the UI
                         console.log("Update the heart rate");
                         this.mHeartBeat.onAliveHeartBeat(
                             this.sampleCount+i+1-nDelay,

@@ -5,7 +5,7 @@
         this.TAG = "EcgView";
         this.IN_TO_CM = 2.54; // 2.54f
 
-        this.SWEEPBAR_WIDTH = 5;
+        this.SWEEPBAR_WIDTH = 1;
         this.mEcgFilter = ""; // Using simple averaging LP filter, that also removes mains noise
         this.mInitalized = false;
         this.mEcgBuffer = "";
@@ -34,7 +34,7 @@
             this.contextView.lineCap = "round";
             this.contextView.lineJoin = "round";
 
-            this.onMeasure();//test
+            this.onMeasure();
 
             window.addEventListener('resize', this.onMeasure.bind(this), false);
             this.onMeasure();
@@ -50,15 +50,16 @@
         onMeasure() {
             this.mView.width = window.innerWidth / 2;
             this.mView.height = window.innerHeight;
+
             this.mXppcm = this.mView.width / this.IN_TO_CM;
             this.mYppcm = this.mView.height / this.IN_TO_CM;
-            this.mYppcm = this.mXppcm;
+            //this.mYppcm = this.mXppcm;
 
             // XScale set to 25mm/s. Sample rate is 300 Hz, so 300 samples per 25mm
-            this.mXScale = 2.5 * this.mXppcm / 300.0;
+            this.mXScale = 1.25 * this.mXppcm / 300.0;
 
             // YScale set to 10mm/mV. 8bit, 20uV LSB or 50=1mV
-            this.mYScale = this.mYppcm / 50.0;
+            this.mYScale = this.mYppcm / 25;
 
             this.mYOffset = this.mView.height * 0.4;
             this.mWidth = this.mView.width;
@@ -72,7 +73,7 @@
         onDraw() {
             if(!this.mInitalized) return; // Nothing to draw
 
-            var sweepbarSamples = Math.floor(this.SWEEPBAR_WIDTH*300/25.0);
+            var sweepbarSamples = Math.floor(this.SWEEPBAR_WIDTH*300/12.5);
 
             this.contextView.beginPath();
 
@@ -88,10 +89,20 @@
             for(var x= startIndex;x<endIndex;x++) {
                 var xPos = x * this.mXScale;
                 xPos = xPos % this.mWidth;
-                var yPos = this.mYOffset - this.mEcgBuffer.get(x)*this.mYScale;
+                //var yPos = this.mYOffset - this.mEcgBuffer.get(x)*this.mYScale;
+                //var yPos = this.mYOffset + this.mEcgBuffer.get(x)*0.5
+                var yPos;
+                if(this.mEcgBuffer.get(x) > 20) {
+                    yPos = this.mYOffset - this.mEcgBuffer.get(x)*this.mYScale*0.025;
+                } else {
+                    yPos = this.mYOffset - this.mEcgBuffer.get(x)*this.mYScale;
+                }
 
-                /*console.log("xPos = " + xPos);
-                console.log("yPos = " + yPos);*/
+                /*console.log(
+                    "mYOffset = " + this.mYOffset +
+                    " xPos = " + xPos +
+                    " yPos = " + yPos
+                );*/
 
                 if(x==startIndex || xPos<lastXPos) {
                     this.contextView.moveTo(xPos, yPos);
@@ -139,7 +150,7 @@
                 for (var i = 0; i < len; i++) {
                     var s = new Int8Array(1);
                     s[0] = ecgBuffer[startIndex+i];
-                    var smp = s[0] & tmp[0];
+                    var smp = (s[0] & tmp[0]);
                     var val = smp-128;
                     val = this.mEcgFilter.filter(-val);
                     this.mEcgBuffer.add(val);

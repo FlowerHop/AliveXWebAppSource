@@ -25,7 +25,6 @@
             this.mSum += datum;
             this.mSum -= this.mBuffer[this.mIndex];
             this.mBuffer[this.mIndex] = datum;
-            //console.log("WINDOW_WIDTH = " + this.WINDOW_WIDTH);
             if (++this.mIndex == this.WINDOW_WIDTH) {
                 this.mIndex = 0;
             }

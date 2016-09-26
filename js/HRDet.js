@@ -86,9 +86,7 @@
             }
 
             // Pass ECG sample to beat detector
-            //console.log("ecgSample: " + ecgSample);
             delay = this.mQrsDet.process(ecgSample);
-            //console.log("QrsDet detector: " + delay);
             // Beat was detected
             if (delay != 0) {
                 this.mCurrQRSSample = this.mSampleCount - delay;
@@ -149,7 +147,6 @@
                 this.mHeartRate = 0.;
             }
             this.mSampleCount++;
-            //console.log("delay = " + delay);
             return delay;
         },
         // trimMean: Returns a trim mean of an array of int's.

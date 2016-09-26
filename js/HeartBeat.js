@@ -5,6 +5,7 @@
         // HeartRate
         this.mHR = "";
         this.mHRUnits = "";
+
         // HeartRateUnits
         this.contextHR = "";
         this.contextHRUnits = "";
@@ -19,7 +20,7 @@
             this.mHRUnits = document.getElementById("ecghr");
             this.contextHRUnits = this.mHRUnits.getContext("2d");
 
-            this.onMeasure();//test
+            this.onMeasure();
 
             window.addEventListener('resize', this.onMeasure.bind(this), false);
             this.onMeasure();
@@ -45,14 +46,10 @@
             if(this.hrString != hrString) {
                 this.hrString = hrString;
                 this.onMeasure();
-                this.contextHR.fillText(this.hrString, this.mHR.width/8, this.mHR.height/2);
             }
-            /*if(mHR.getVisibility() != View.VISIBLE) {
-                mHR.setVisibility(View.VISIBLE);
-                mHRUnits.setVisibility(View.VISIBLE);
-            }*/
         },
         onAliveHeartBeat(timeSampleCount, hr, rrSamples) {
+            console.log(hr);
             this.updateHeartRate(Math.floor(hr+0.5));
         }
     };

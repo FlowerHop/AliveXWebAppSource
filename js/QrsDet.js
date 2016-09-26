@@ -93,9 +93,7 @@
 
             // Filter data
             mfdatum = Math.floor(this.mMainsFilter.filter(datum));
-            //console.log("mfdatum = " + mfdatum);
             fdatum = this.mQRSFilter.addSample(mfdatum);
-            //console.log("fdatum = " + fdatum);
             // Wait until normal detector is ready before calling early detections.
             aPeak = this.peakHeight(fdatum, 0);
             if (aPeak < this.MIN_PEAK_AMP) {

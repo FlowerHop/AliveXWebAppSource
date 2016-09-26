@@ -16,7 +16,6 @@
         },
         filter(val) {
             if(this.mInit==true) {
-                //console.log("MainsFilter: mCount = " + this.mCount);
                 this.mIndex=0;
                 for(var i=0;i<this.mCount;i++) {
                     this.mD[i] = val;
@@ -28,7 +27,6 @@
             this.mD[this.mIndex] = val;
             var sum = 0.0;
             for(var i=0;i<this.mCount;i++) sum += this.mD[i];
-            //console.log(this.mD);
             var avg = sum/this.mCount;
             this.mIndex++;
             if(this.mIndex==this.mCount) this.mIndex=0;

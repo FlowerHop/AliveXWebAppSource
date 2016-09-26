@@ -11,8 +11,6 @@
     }
     CirFloatBufferManager.prototype = {
         ceilingNextPowerOfTwo(x) {
-            /*var tmp = new Int32Array(x);
-            tmp[0] = x;*/
             return 1 << (Math.ceil(Math.log2(x)));
         },
         resize(size) {
@@ -45,7 +43,6 @@
             return(this.mCount);
         },
         add(val) {
-            //console.log("add");
             this.mBuffer[(this.mCount & this.mMask)] = val;
             this.mCount++;
         },

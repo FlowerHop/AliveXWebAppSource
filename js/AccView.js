@@ -6,7 +6,7 @@
 
         this.IN_TO_CM = 2.54;
 
-        this.SWEEPBAR_WIDTH = 5; // 5mm
+        this.SWEEPBAR_WIDTH = 1; // 5mm
         this.ACC_SAMPLING_RATE = 75;
 
         this.mInitalized = false;
@@ -31,7 +31,7 @@
             this.mPath.lineCap = "round";
             this.mPath.lineJoin = "round";
 
-            this.onMeasure();//test
+            this.onMeasure();
 
             window.addEventListener('resize', this.onMeasure.bind(this), false);
             this.onMeasure();
@@ -43,10 +43,12 @@
             this.mXppcm = this.canvas.width / this.IN_TO_CM;
 
             // XScale set to 25mm/s. Sample rate is 75 Hz, so 75 samples per 25mm
-            this.mXScale = 2.5 * this.mXppcm / this.ACC_SAMPLING_RATE;
+            this.mXScale = 1.25 * this.mXppcm / this.ACC_SAMPLING_RATE;
+
+            // There're some problems with mYOffset and mYScale
 
             // YScale set to 10mm/mV. 8bit, 20uV LSB or 50=1mV
-            this.mYScale = 0.2 * this.canvas.height/255;
+            this.mYScale = 0.25 * this.canvas.height/255;
 
             this.mYOffset = this.canvas.height * 0.25;
             this.mWidth = this.canvas.width;
@@ -80,11 +82,11 @@
                 var tmp = new Int8Array(1);
                 tmp[0] = 0xFF;
                 var yPos = this.mYOffset - ((this.mAccBuffer.get(x*3)&tmp[0])-128)*this.mYScale;
-                console.log("X: " +
+                /*console.log("X: " +
                 "mYOffset = " + this.mYOffset +
                 " xPos = " + xPos +
                 " yPos = " + yPos +
-                " " + ((this.mAccBuffer.get(x*3)&tmp[0])-128));
+                " " + ((this.mAccBuffer.get(x*3)&tmp[0])-128));*/
                 if(x==startIndex || xPos<lastXPos) {
                     this.mPath.moveTo(xPos, yPos);
                 }else {
@@ -107,11 +109,11 @@
                 var tmp = new Int8Array(1);
                 tmp[0] = 0xFF;
                 var yPos = this.mYOffset - ((this.mAccBuffer.get(x*3+1)&tmp[0])-128)*this.mYScale;
-                console.log("Y: " +
+                /*console.log("Y: " +
                 "mYOffset = " + this.mYOffset +
                 " xPos = " + xPos +
                 " yPos = " + yPos +
-                " " + ((this.mAccBuffer.get(x*3+1)&tmp[0])-128));
+                " " + ((this.mAccBuffer.get(x*3+1)&tmp[0])-128));*/
                 if(x==startIndex || xPos<lastXPos) {
                     this.mPath.moveTo(xPos, yPos);
                 }else {
@@ -134,11 +136,11 @@
                 var tmp = new Int8Array(1);
                 tmp[0] = 0xFF;
                 var yPos = this.mYOffset - ((this.mAccBuffer.get(x*3+2)&tmp[0])-128)*this.mYScale;
-                console.log("Z: " +
+                /*console.log("Z: " +
                 "mYOffset = " + this.mYOffset +
                 " xPos = " + xPos +
                 " yPos = " + yPos +
-                " " + ((this.mAccBuffer.get(x*3+2)&tmp[0])-128));
+                " " + ((this.mAccBuffer.get(x*3+2)&tmp[0])-128));*/
                 if(x==startIndex || xPos<lastXPos) {
                     this.mPath.moveTo(xPos, yPos);
                 }else {
@@ -168,7 +170,6 @@
                 }
                 var startIndex = packet.getAccDataIndex();
                 var accBuffer = new Int8Array(packet.getPacketData());
-                //console.log("accBuffer = " + accBuffer);
                 for (var i = 0; i < len; i+=3) {
                     this.mAccBuffer.add(accBuffer[startIndex+i]);
                     this.mAccBuffer.add(accBuffer[startIndex+i+1]);

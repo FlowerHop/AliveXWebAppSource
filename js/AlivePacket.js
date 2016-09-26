@@ -26,7 +26,7 @@
         this.mAccID = new Int8Array(1);
         this.mAccDataIndex = "";
         this.mBuffer = new Int8Array(this.BUFFER_SIZE);
-        this.mPacketCheckSum = new Int8Array(1); // type => signed byte
+        this.mPacketCheckSum = new Int8Array(1);
         this.mInfo = new Int8Array(1);
         this.mSeqNum = "";
         this.mPrevSeqNum = "";
@@ -105,16 +105,12 @@
             ucData[0] = tmp_ucData;
             this.mBuffer[this.mPacketBytes] = ucData[0];
             this.mPacketBytes++;
-            //console.log(ucData[0]);
             switch (this.mState) {
               case this.ESTATE_SYNC:
-              //console.log("mState == ESTATE_SYNC");
                   if (this.mPacketBytes == 1) {
-                      //console.log("mPacketBytes == 1");
                       tmp[0] = 0x00;
-                      if (ucData[0] == tmp[0]) { // 0x00
+                      if (ucData[0] == tmp[0]) {
                           // Start of new packet
-                          //console.log("ucData == 0");
                           this.mPacketCheckSum[0] = 0; // Start new checksum
                           this.mECGLength = 0;
                           this.mAccLength = 0;
@@ -122,8 +118,7 @@
                       } else {
                           this.mPacketBytes = 0;
                       }
-                  } else if (this.mPacketBytes == 2) { // 0xFE
-                      //console.log("mPacketBytes == 2");
+                  } else if (this.mPacketBytes == 2) {
                       tmp[0] = 0xFE;
                       if (ucData[0] == tmp[0]) {
                           this.mState = this.ESTATE_PACKETHEADER;
@@ -135,23 +130,18 @@
                   break;
 
               case this.ESTATE_PACKETHEADER:
-              //console.log("mState == ESTATE_PACKETHEADER");
                   if (this.mPacketBytes == 3) {
-                      //console.log("mPacketBytes == 3");
                       this.mBattPercent = ucData[0] / 2.0;
                   } else if (this.mPacketBytes == 4) {
                       // use for loop to deal with bit operations
-                      //console.log("mPacketBytes == 4");
                       tmp[0] = 0xF0;
                       this.mInfo[0] = ((ucData[0] & tmp[0]) >> 4); // Top nibble for info
                       tmp[0] = 0x0F;
                       this.mSeqNum = ((ucData[0] & tmp[0]) << 8); // Bottom nibble is the high 4 bits of 12 bit sequence number
                   } else if (this.mPacketBytes == 5) {
-                      //console.log("mPacketBytes == 5");
                       tmp[0] = 0xFF;
                       this.mSeqNum |= (ucData[0] & tmp[0]); // Low 8 bits of 12 bit sequence number
                   } else if (this.mPacketBytes == 6) {
-                      //console.log("mPacketBytes == 6");
                       this.mDataChannels = ucData[0];
                       this.mDataChannel = 0;
                       this.mChannelByteCount = 0;
@@ -170,17 +160,13 @@
                   }
                   break;
               case this.ESTATE_DATAHEADER:
-              //console.log("mState == ESTATE_DATAHEADER");
                   this.mChannelByteCount++;
                   if (this.mChannelByteCount == 1) {
-                      //console.log("mChannelByteCount == 1");
                       this.mChannelType = ucData[0];
                   } else if (this.mChannelByteCount == 2) {
-                      //console.log("mChannelByteCount == 2");
                       tmp[0] = 0xFF;
                       this.mChannelPacketLength = ((ucData[0] & tmp[0]) << 8);
                   } else if (this.mChannelByteCount == 3) {
-                      //console.log("mChannelByteCount == 3");
                       tmp[0] = 0xFF;
                       this.mChannelPacketLength |= (ucData[0] & tmp[0]);
 
@@ -193,7 +179,6 @@
                           console.log("Packet is too large");
                       }
                   } else if (this.mChannelByteCount == 4) {
-                      //console.log("mChannelByteCount == 4");
                       this.mChannelFormat = ucData[0];
 
                       // Note: any additional header bytes are ignored
@@ -202,11 +187,8 @@
                   }
                   break;
               case this.ESTATE_DATA:
-             // console.log("mState == ESTATE_DATA");
                   this.mChannelByteCount++;
                   if (this.mChannelByteCount == this.mChannelPacketLength) {
-                      //console.log("mChannelByteCount = " + this.mChannelByteCount);
-                      //console.log("mChannelType = " + this.mChannelType);
                       tmp[0] = 0xAA;
                       tmp[1] = 0x56;
                       tmp[2] = 0x55;
@@ -218,7 +200,6 @@
                           this.mECGDataIndex = this.mPacketBytes - this.mECGLength;
                       } else if (this.mChannelType == tmp[1]) { // 0x56
                           // Acc 3 channel data packet
-                          //console.log("Acc 3 channel data packet");
                           this.mAccID = this.mChannelType;
                           this.mAccChannels = 3;
                           this.mAccFormat[0] = this.mChannelFormat;
@@ -239,7 +220,6 @@
                   }
                   break;
               case this.ESTATE_CHECKSUM:
-              //console.log("mState == ESTATE_CHECKSUM");
                   if (ucData[0] == this.mPacketCheckSum[0]) {
                       this.mState = this.ESTATE_SYNC;
                       this.mPacketBytes = 0;

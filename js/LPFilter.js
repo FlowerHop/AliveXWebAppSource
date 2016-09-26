@@ -31,7 +31,6 @@
             var output;
             var halfPtr;
 
-            //console.log("LPBUFFER_LGTH = " + this.LPBUFFER_LGTH);
             halfPtr = this.mIndex - (this.LPBUFFER_LGTH / 2); // Use halfPtr to index
             if (halfPtr < 0) // to x[n-6].
             {
@@ -41,10 +40,10 @@
             this.mY2 = this.mY1;
             this.mY1 = y0;
             output = Math.floor(y0 / ((this.LPBUFFER_LGTH * this.LPBUFFER_LGTH) / 4));
-            this.mBuffer[this.mIndex] = datum;// Stick most recent sample into
-            if (++this.mIndex == this.LPBUFFER_LGTH)// the circular buffer and update
+            this.mBuffer[this.mIndex] = datum; // Stick most recent sample into
+            if (++this.mIndex == this.LPBUFFER_LGTH) // the circular buffer and update
             {
-                this.mIndex = 0;// the buffer pointer.
+                this.mIndex = 0; // the buffer pointer.
             }
             return (output);
         }
