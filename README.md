@@ -12,10 +12,10 @@ I have been trying to **transform** the original android app into a web app
 2. The flow of the alive app
 3. Codes organization
 4. Differences between native language(android) and web language(javascript)
-5. How to communicate with the **Alive** sensor device
+5. How to communicate with the **Alive Sensor Device**
 6. Signal analysis(raw data and packet)
 7. Internet protocol(frame)
-8. Drawing too fast in the web browser(trying)
+8. Need to filter the signal before drawing(trying)
 
 ## Methods that I've used and found
 
@@ -47,4 +47,4 @@ I have been trying to **transform** the original android app into a web app
 4. [Websocket client side](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications#Sending_data_to_the_server)
 5. [Bluetooth](http://www.bluecove.org/bluecove/apidocs/overview-summary.html)
 
-by 2016/9/25
+by 2016/9/29
