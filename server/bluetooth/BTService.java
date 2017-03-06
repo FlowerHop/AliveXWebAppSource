@@ -16,7 +16,7 @@ public class BTService {
     //private UUID HANDS_FREE = new UUID(0x111E);
     private UUID SERIAL_PORT = new UUID(0x1101);
     private UUID[] uuidSet = new UUID[] { SERIAL_PORT };
-    private int[] attrIDs =  new int[] { 0x1101};
+    private int[] attrIDs =  new int[] { 0x0100 };
     private ArrayList<RemoteDevice> remoteDevices;
 
     public ArrayList<HashMap<String, String>> listServiceBTDevices;
