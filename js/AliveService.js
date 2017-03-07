@@ -17,7 +17,7 @@
     }
     AliveServiceManager.prototype = {
         start() {
-            this.mSocket = new WebSocket("ws://127.0.0.1:80");
+            this.mSocket = new WebSocket("ws://127.0.0.1:8080");
             this.mSocket.binaryType = "arraybuffer";
 
             this.mSocket.onopen = function (evt) {
@@ -27,7 +27,9 @@
             this.mSocket.onmessage = function (evt) {
                 if (evt.data instanceof ArrayBuffer) {
                     var mBytesBuffer = new Int8Array(evt.data);
-                    this.run(mBytesBuffer[0]);
+                    for (var i = 0; i < mBytesBuffer.length; i++) {
+                      this.run(mBytesBuffer[i]);    
+                    }
                 }
             }.bind(this);
 

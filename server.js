@@ -30,7 +30,7 @@ port.on ('open', function (err) {
   }
     
   port.on ('data', function (data) {
-    var ab = toArrayBuffer (data);
+    //var ab = toArrayBuffer (data);
     if (s == undefined) {
 //     console.log ('no socket');
     } else {
@@ -47,16 +47,15 @@ server.listen (8080, function () {
 });
 
 
-function toArrayBuffer (buf) {
-  var ab = new ArrayBuffer (buf.length);
-  var view = new Uint8Array (ab);
-  for (var i = 0; i < buf.length; i++) {
-    view[i] = buf[i];
-  }
+// function toArrayBuffer (buf) {
+//   var ab = new ArrayBuffer (buf.length);
+//   var view = new Uint8Array (ab);
+//   for (var i = 0; i < buf.length; i++) {
+//     view[i] = buf[i];
+//   }
 
-  return ab;
-
-}
+//   return ab;
+// }
 
 /*
 device.listPairedDevices (console.log);
