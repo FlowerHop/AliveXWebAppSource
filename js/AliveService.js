@@ -62,13 +62,17 @@
                         this.mHeartBeat.onAliveHeartBeat(
                             this.sampleCount+i+1-nDelay,
                             this.mHRDet.getHR(),
-                            this.mHRDet.getLastRR()
+                            this.mHRDet.getLastRR(),
+                            this.mHRDet.getHRV ()
                         );
                     }
                 }
                 this.sampleCount += len;
                 console.log("sampleCount = " + this.sampleCount);
             }
+        }, 
+        stop () {
+            this.mSocket.close ();
         }
     };
 

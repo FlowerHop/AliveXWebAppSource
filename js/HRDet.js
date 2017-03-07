@@ -30,6 +30,9 @@
         this.mRRIntervalCount = "";
         this.mRRIndex = "";
 
+        this.mRRIntervalList = [];
+        this.mHRV = new HRV ();
+
         this.mRRIntervalHistory = new Array(this.HISTORYBUFFER_LENGTH);
         this.mQrsSampleHistory = new Array(this.HISTORYBUFFER_LENGTH);
         this.mHistoryCount = 0;
@@ -43,6 +46,15 @@
         getLastRR() {
             return this.mCurrHR;
         },
+
+        getRRInterval30 () {
+            return this.mRRIntervalList;
+        },
+        
+        getHRV () {
+            return this.mHRV;
+        },
+
         getHR() {
             return this.mHeartRate;
         },
@@ -61,7 +73,7 @@
             this.mRRIntervalCount = 0;
             this.mRRIndex = 0;
             this.mHistoryCount = 0;
-
+            this.mRRIntervalList = [];
             // Reset the beat detector
             this.mQrsDet.init();
         },
@@ -97,6 +109,12 @@
 
                     this.mRRIntervalCount++;
                     this.mRRInterval[this.mRRIndex++] = this.mCurrRR;
+
+                    if (this.mCurrRR > 60 && this.mCurrRR < 600) {
+                        this.mRRIntervalList.push(parseInt (1000*this.mCurrRR/this.mSAMPLE_RATE + 0.5));
+                        mHRV.addRR(parseInt(1000*this.mCurrRR/this.mSAMPLE_RATE + 0.5));
+                    }
+
                     if (this.mRRIndex >= this.MEDIAN_WINDOW_LENGTH) {
                         this.mRRIndex = 0;
                     }
