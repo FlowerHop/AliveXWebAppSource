@@ -94,7 +94,7 @@
 	      	    }
 	      	    if (num == 0 || this.RRs.length < num) {
 	      	        RRSum = RRSum / (this.RRs.length - 1);
-	      	        RRDif = RRDif / (this.RRs.legnth - 1);
+	      	        RRDif = RRDif / (this.RRs.length - 1);
 	      	    } else {
 	      	        RRSum = RRSum / (num - 1);
 	      	        RRDif = RRDif / (num - 1);
