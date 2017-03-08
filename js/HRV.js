@@ -133,84 +133,85 @@
 	      var count = num;
 	      if (count == 0) {
 	      	count = this.RRs.length;
-	        var fftRRArray = new Array (this.fftN); // fftN length
-	        var RRsDouble = new Array (this.fftN); // fftN length
-
-	        for (var i = 0; i < fftRRArray.length; i++) {
-	          fftRRArray[i] = 0;
-	          RRsDouble[i] = 0;
-	        }
-
-	        this.n = count;
-
-	        for (var i = this.RRs.length - 1; i > 0 && count > 0; i--, count--) {
-	          RRsDouble[count - 1] = this.RRs[i] - this.meanRR;
-	        }
-
-	        this.fft (RRsDouble, fftRRArray);
-	        this.complexAbs (RRsDouble, fftRRArray);
-
-	        var freMean = [];
-	        for (var i = 0; i < RRsDouble.legnth; i++) {
-	        	freMean.push (RRsDouble[i]);
-	        }
-
-	        this.fftRRs = [];
-	        var phz = 1.0/this.fftN;
-	        var TPMean = 0;
-	        var VLFMean = 0;
-	        var LFMean = 0;
-	        var HFMean = 0;
-	        var VLFc = 0;
-	        var LFc = 0;
-	        var HFc = 0;
-
-	        for (var i = 0; (i + 1)*phz <= 0.4 && i < freMean.length; i++) {
-	            var value = freMean[i];
-	            this.fftRRs.push (value);
-
-	            if ((i + 1)*phz < 0.04) {
-	                VLFMean += value;
-	                VLFc++; 
-	            } else if ((i + 1)*phz < 0.15) {
-	                LFMean += value;
-	                LFc++;   
-	            } else if ((i + 1)*phz < 0.4) {
-	                HFMean += value;
-	                HFc++;
-	            }
-
-	            TPMean += value;
-	            VLFMean /= VLFc;
-	            LFmean /= LFc;
-	            HFmean /= HFc;
-	            TPmean /= (VLFc+LFc+HFc);
-
-	            for (var i = 0; (i + 1)*phz <= 0.4 && i < freMean.length; i++) {
-	                var value = freMean[i];
-	                this.fftRRs.push(value);
-
-	                if ((i + 1)*phz < 0.04) {
-	                    VLF += (value-VLFmean)*(value-VLFmean);
-	                } else if ((i + 1)*phz < 0.15) {
-	                    LF += (value-LFmean)*(value-LFmean);
-	                } else if ((i + 1)*phz < 0.4) {
-	                    HF += (value-HFmean)*(value-HFmean);
-	                }
-	                TP += (value-TPmean)*(value-TPmean);
-	            }
-	            this.VLF /= (VLFc - 1);
-	            this.VLF = Math.sqrt(this.VLF);
-	            this.LF /= (LFc - 1);
-	            this.LF = Math.sqrt(this.LF);
-	            this.HF /= (HFc - 1);
-	            this.HF = Math.sqrt(this.HF);
-	            this.TP /= (VLFc + HFc + LFc - 1);
-	            this.TP = Math.sqrt(this.TP);
-	        }
-
-
 	      }
+	      var fftRRArray = new Array (this.fftN); // fftN length
+	      var RRsDouble = new Array (this.fftN); // fftN length
+
+	      for (var i = 0; i < fftRRArray.length; i++) {
+	        fftRRArray[i] = 0;
+	        RRsDouble[i] = 0;
+	      }
+
+	      this.n = count;
+
+	      for (var i = this.RRs.length - 1; i > 0 && count > 0; i--, count--) {
+	        RRsDouble[count - 1] = this.RRs[i] - this.meanRR;
+	      }
+
+	      this.fft (RRsDouble, fftRRArray);
+	      this.complexAbs (RRsDouble, fftRRArray);
+
+	      var freMean = [];
+	      for (var i = 0; i < RRsDouble.legnth; i++) {
+	        freMean.push (RRsDouble[i]);
+	      }
+
+	      this.fftRRs = [];
+	      var phz = 1.0/this.fftN;
+	      var TPMean = 0;
+	      var VLFMean = 0;
+	      var LFMean = 0;
+	      var HFMean = 0;
+	      var VLFc = 0;
+	      var LFc = 0;
+	      var HFc = 0;
+
+	      for (var i = 0; (i + 1)*phz <= 0.4 && i < freMean.length; i++) {
+	          var value = freMean[i];
+	          this.fftRRs.push (value);
+
+	          if ((i + 1)*phz < 0.04) {
+	              VLFMean += value;
+	              VLFc++; 
+	          } else if ((i + 1)*phz < 0.15) {
+	              LFMean += value;
+	              LFc++;   
+	          } else if ((i + 1)*phz < 0.4) {
+	              HFMean += value;
+	              HFc++;
+	          }
+
+	          TPMean += value;
+	          VLFMean /= VLFc;
+	          LFmean /= LFc;
+	          HFmean /= HFc;
+	          TPmean /= (VLFc+LFc+HFc);
+
+	          for (var i = 0; (i + 1)*phz <= 0.4 && i < freMean.length; i++) {
+	              var value = freMean[i];
+	              this.fftRRs.push(value);
+
+	              if ((i + 1)*phz < 0.04) {
+	                  VLF += (value-VLFmean)*(value-VLFmean);
+	              } else if ((i + 1)*phz < 0.15) {
+	                  LF += (value-LFmean)*(value-LFmean);
+	              } else if ((i + 1)*phz < 0.4) {
+	                  HF += (value-HFmean)*(value-HFmean);
+	              }
+	              TP += (value-TPmean)*(value-TPmean);
+	          }
+	          this.VLF /= (VLFc - 1);
+	          this.VLF = Math.sqrt(this.VLF);
+	          this.LF /= (LFc - 1);
+	          this.LF = Math.sqrt(this.LF);
+	          this.HF /= (HFc - 1);
+	          this.HF = Math.sqrt(this.HF);
+	          this.TP /= (VLFc + HFc + LFc - 1);
+	          this.TP = Math.sqrt(this.TP);
+	      }
+
+
+	      
 		},
 
 		complexAbs (x, y) {
