@@ -153,8 +153,8 @@
 	        this.complexAbs (RRsDouble, fftRRArray);
 
 	        var freMean = [];
-	        for (var i = 0; i < RRsDouble.legnth; i++) {
-	          freMean.push (RRsDouble[i]);
+	        for (var i = 0; i < RRsDouble.length; i++) {
+              freMean.push (RRsDouble[i]);
 	        }
 
 	        this.fftRRs = [];
