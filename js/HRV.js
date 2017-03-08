@@ -17,7 +17,7 @@
 	    this.TP = 0;
 	    this.other = 0;
 	    this.l = 0;
-	    this.FFTBuild (fftN);
+	    this.FFTBuild (this.fftN);
 	    this.n = 0;
 	    this.m = 0;
 	    this.cos = [];

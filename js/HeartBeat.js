@@ -94,7 +94,7 @@
             if (hrv.getRRs ().length < 32) {
                 console.log ("計算中(Calculating)..."+(32 - hrv.getRRs().length));
             } else {
-
+                checkCon (hrv);
             }
 
         },
