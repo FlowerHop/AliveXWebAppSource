@@ -2,26 +2,26 @@
 
 (function (exports) {
 	var HRV = function () {
-		var RRs = [];
-		var fftRRs = [];
-		var fftN = 256;
-		var SDNN = 0;
-	    var SDANN = 0;
-	    var RMSSD = 0;
-	    var NN50 = 0;
-	    var pNN50 = 0;
-	    var meanRR = 0;
-	    var VLF = 0;
-	    var HF = 0;
-	    var LF = 0;
-	    var TP = 0;
-	    var other = 0;
-	    var l = 0;
+		this.RRs = [];
+		this.fftRRs = [];
+		this.fftN = 256;
+		this.SDNN = 0;
+	    this.SDANN = 0;
+	    this.RMSSD = 0;
+	    this.NN50 = 0;
+	    this.pNN50 = 0;
+	    this.meanRR = 0;
+	    this.VLF = 0;
+	    this.HF = 0;
+	    this.LF = 0;
+	    this.TP = 0;
+	    this.other = 0;
+	    this.l = 0;
 	    this.FFTBuild (fftN);
-	    var n = 0;
-	    var m = 0;
-	    var cos = [];
-	    var sin = [];
+	    this.n = 0;
+	    this.m = 0;
+	    this.cos = [];
+	    this.sin = [];
 	};
 
 	HRV.prototype = {
