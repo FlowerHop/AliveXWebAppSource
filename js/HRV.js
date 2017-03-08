@@ -194,13 +194,13 @@
 	            this.fftRRs.push(value);
 
 	            if ((i + 1)*phz < 0.04) {
-	                VLF += (value-VLFMean)*(value-VLFMean);
+	                this.VLF += (value-VLFMean)*(value-VLFMean);
 	            } else if ((i + 1)*phz < 0.15) {
-	                LF += (value-LFMean)*(value-LFMean);
+	                this.LF += (value-LFMean)*(value-LFMean);
 	            } else if ((i + 1)*phz < 0.4) {
-	                HF += (value-HFMean)*(value-HFMean);
+	                this.HF += (value-HFMean)*(value-HFMean);
 	            }
-	            TP += (value-TPMean)*(value-TPMean);
+	            this.TP += (value-TPMean)*(value-TPMean);
 	        }
 	        this.VLF /= (VLFc - 1);
 	        this.VLF = Math.sqrt(this.VLF);
@@ -209,11 +209,7 @@
 	        this.HF /= (HFc - 1);
 	        this.HF = Math.sqrt(this.HF);
 	        this.TP /= (VLFc + HFc + LFc - 1);
-	        this.TP = Math.sqrt(this.TP);
-	      
-
-
-	      
+	        this.TP = Math.sqrt(this.TP);      
 		},
 
 		complexAbs (x, y) {
