@@ -111,8 +111,8 @@
                     this.mRRInterval[this.mRRIndex++] = this.mCurrRR;
 
                     if (this.mCurrRR > 60 && this.mCurrRR < 600) {
-                        this.mRRIntervalList.push(parseInt (1000*this.mCurrRR/this.mSAMPLE_RATE + 0.5));
-                        this.mHRV.addRR(parseInt(1000*this.mCurrRR/this.mSAMPLE_RATE + 0.5));
+                        this.mRRIntervalList.push(parseInt (1000*this.mCurrRR/this.mSampleRate + 0.5));
+                        this.mHRV.addRR(parseInt(1000*this.mCurrRR/this.mSampleRate + 0.5));
                     }
 
                     if (this.mRRIndex >= this.MEDIAN_WINDOW_LENGTH) {
