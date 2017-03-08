@@ -78,19 +78,22 @@
 
 	      	count = num;
 
-	      	if (num == 0 || this.RRs.length < num)
+	      	if (num == 0 || this.RRs.length < num) {
 	      	    this.meanRR = RRSum / this.RRs.length;
-	      	else
+	      	} else {
 	      	    this.meanRR = RRSum / num;
+	      	}
 	      	//meanRRrate = (int)(60./(meanRR/QrsDet.SAMPLE_RATE)+0.5);
 	      	if (this.RRs.length > 1) {
 	      	    RRSum = 0;
-	      	    if (num == 0)
+	      	    if (num == 0) {
 	      	        count = this.RRs.length;
+	      	    }
 	      	    for (var i = this.RRs.length - 1; i > 0 && count > 0; i--, count--) {
 	      	        RRSum += (this.RRs[i] - this.meanRR) * (this.RRs[i] - this.meanRR);
-	      	        if (i > 0 && count > 0)
+	      	        if (i > 0 && count > 0) {
 	      	        	RRDif += (this.RRs[i] - this.RRs[i-1])*(this.RRs[i] - this.RRs[i-1]);
+	      	        }
 	      	    }
 	      	    if (num == 0 || this.RRs.length < num) {
 	      	        RRSum = RRSum / (this.RRs.length - 1);
