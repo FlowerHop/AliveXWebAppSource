@@ -51,10 +51,12 @@
                 var len = this.hmPacket.getECGLength();
                 var startIndex = this.hmPacket.getECGDataIndex();
                 var buffer = new Int8Array(this.hmPacket.getPacketData());
-                var tmp = new Int8Array(1);
-                tmp[0] = 0xFF;
+                var tmp = 0xFF;
+                // var tmp = new Int8Array(1); // in nodejs, it won't work
+                // tmp[0] = 0xFF;
                 for(var i = 0; i < len; i++) {
-                    var nDatum = (buffer[startIndex+i] & tmp[0]);
+                    // var nDatum = (buffer[startIndex+i] & tmp[0]);
+                    var nDatum = (buffer[startIndex+i] & tmp);
                     var nDelay = this.mHRDet.process(nDatum);
                     if(nDelay!=0) {
                         // Update the heart-rate in the UI
