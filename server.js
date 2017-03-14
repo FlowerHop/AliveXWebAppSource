@@ -40,14 +40,13 @@ port.on ('open', function (err) {
         var result = results[i].match (/\[([^\[|^\]]+)\]/)[1];
         if (result !== 'e') {
           // rawData = (result - 3300/10000)/10;
-          packet.push ((result - 3300/10000)/10);
+          packet.push ({data: ((result - 3300/10000)/10), timestamp: new Date ().getTime ()});
         }
       } 
 
       if (packet.length != 0) {
         if (s) {
-          s.send (packet);
-          console.log (packet);
+          s.send (JSON.stringify (packet));
         }
       }
   });

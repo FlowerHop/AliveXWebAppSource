@@ -25,12 +25,14 @@
             }.bind(this);
 
             this.mSocket.onmessage = function (evt) {
-                if (evt.data instanceof ArrayBuffer) {
-                    var mBytesBuffer = new Int8Array(evt.data);
+                // console.log (JSON.parse (evt.data));
+                var mBytesBuffer = JSON.parse (evt.data);
+                // if (evt.data instanceof ArrayBuffer) {
+                    // var mBytesBuffer = new Int8Array(evt.data);
                     //for (var i = 0; i < mBytesBuffer.length; i++) {
-                      this.run(mBytesBuffer);    
+                this.run(mBytesBuffer);    
                     //}
-                }
+                // }
             }.bind(this);
 
             this.mSocket.onerror = function (evt) {
@@ -53,8 +55,9 @@
             // tmp[0] = 0xFF;
             // console.log (mBytesBuffer);
             for(var i = 0; i < len; i++) {
+                // console.log (new Date ().getTime () - mBytesBuffer[i].t);
                 // var nDatum = (buffer[startIndex+i] & tmp[0]);
-                var nDelay = this.mHRDet.process(mBytesBuffer[i]);
+                var nDelay = this.mHRDet.process(mBytesBuffer[i].data);
                 if(nDelay!=0) {
                     // Update the heart-rate in the UI
                     console.log("Update the heart rate");
