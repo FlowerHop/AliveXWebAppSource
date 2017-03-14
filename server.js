@@ -35,13 +35,21 @@ port.on ('open', function (err) {
   port.on ('data', function (data) {
       var d = data.toString ('utf-8');
       var results = d.match (/(\[[^\[|^\]]+\])/g);
+      var packet = [];
       for (var i in results) {
         var result = results[i].match (/\[([^\[|^\]]+)\]/)[1];
         if (result !== 'e') {
-          rawData = (result - 3300/10000)/10;
-          console.log (rawData);
+          // rawData = (result - 3300/10000)/10;
+          packet.push ((result - 3300/10000)/10);
         }
       } 
+
+      if (packet.length != 0) {
+        if (s) {
+          s.send (packet);
+          console.log (packet);
+        }
+      }
   });
 });
 // var j = 0;
@@ -53,17 +61,18 @@ port.on ('open', function (err) {
 //   }
 // }, 1);
 
-setInterval (function () {
-  if (s) {
-    if (rawData != 0) {
-      packet.push (rawData);
-      if (packet.length >= 30) {
-        s.send (packet);
-        packet = [];
-      }
-    }  
-  }
-}, 1000.0/300.0);
+// setInterval (function () {
+//   if (s) {
+//     if (rawData != 0) {
+//       packet.push (rawData);
+//       if (packet.length >= 30) {
+//         s.send (packet);
+//         console.log (packet);
+//         packet = [];
+//       }
+//     }  
+//   }
+// }, 100.0/300.0);
 
 
 server.listen (8080, function () {

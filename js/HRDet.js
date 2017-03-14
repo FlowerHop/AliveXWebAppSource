@@ -92,7 +92,7 @@
             // tmp *= 200;
             // tmp /= this.mADCUnit;
             // ecgSample = tmp;
-            console.log ('ecgSample: ' + ecgSample);
+            // console.log ('ecgSample: ' + ecgSample);
             if (this.mSampleCount == 0) {
                 this.mQrsDet.init();
             }

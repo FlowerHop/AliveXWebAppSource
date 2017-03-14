@@ -51,6 +51,7 @@
             var len = mBytesBuffer.length;
             // var tmp = new Int8Array(1); // in nodejs, it won't work
             // tmp[0] = 0xFF;
+            // console.log (mBytesBuffer);
             for(var i = 0; i < len; i++) {
                 // var nDatum = (buffer[startIndex+i] & tmp[0]);
                 var nDelay = this.mHRDet.process(mBytesBuffer[i]);
@@ -63,7 +64,6 @@
                         this.mHRDet.getLastRR(),
                         this.mHRDet.getHRV ()
                     );
-                    console.log (this.mHRDet.getHRV ().getRRs ());
                 }
             }
             this.sampleCount += len;
