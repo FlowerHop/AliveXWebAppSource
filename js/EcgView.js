@@ -48,7 +48,7 @@
             return Math.floor(5*yppcm);
         },
         onMeasure() {
-            this.mView.width = window.innerWidth / 2;
+            this.mView.width = window.innerWidth;
             this.mView.height = window.innerHeight;
 
             this.mXppcm = this.mView.width / this.IN_TO_CM;
@@ -59,7 +59,7 @@
             this.mXScale = 1.25 * this.mXppcm / 300.0;
 
             // YScale set to 10mm/mV. 8bit, 20uV LSB or 50=1mV
-            this.mYScale = this.mYppcm / 25;
+            this.mYScale = this.mYppcm / 100;
 
             this.mYOffset = this.mView.height * 0.4;
             this.mWidth = this.mView.width;
@@ -92,17 +92,17 @@
                 //var yPos = this.mYOffset - this.mEcgBuffer.get(x)*this.mYScale;
                 //var yPos = this.mYOffset + this.mEcgBuffer.get(x)*0.5
                 var yPos;
-                if(this.mEcgBuffer.get(x) > 20) {
-                    yPos = this.mYOffset - this.mEcgBuffer.get(x)*this.mYScale*0.025;
-                } else {
+                // if(this.mEcgBuffer.get(x) > 20) {
+                    // yPos = this.mYOffset - this.mEcgBuffer.get(x)*this.mYScale*0.025;
+                // } else {
                     yPos = this.mYOffset - this.mEcgBuffer.get(x)*this.mYScale;
-                }
-
-                /*console.log(
-                    "mYOffset = " + this.mYOffset +
-                    " xPos = " + xPos +
-                    " yPos = " + yPos
-                );*/
+                // }
+                 
+                // console.log(
+                //     "mYOffset = " + this.mYOffset +
+                //     " xPos = " + xPos +
+                //     " yPos = " + yPos
+                // );
 
                 if(x==startIndex || xPos<lastXPos) {
                     this.contextView.moveTo(xPos, yPos);
@@ -133,7 +133,7 @@
             this.onDraw();
         },
         onAlivePacket(timeSampleCount, packet) {
-            var len = packet.getECGLength();
+            var len = packet.length;
             if (len > 0) {
                 if(!this.mInitalized) {
                     // Extra samples for filter delay etc
@@ -143,15 +143,15 @@
                     this.mEcgFilter = new MainsFilterManager();
                     this.mInitalized = true;
                 }
-                var startIndex = packet.getECGDataIndex();
-                var ecgBuffer = new Int8Array(packet.getPacketData());
-                var tmp = new Int8Array(1);
-                tmp[0] = 0xFF;
+                // var ecgBuffer = new Int8Array(packet);
+                
                 for (var i = 0; i < len; i++) {
                     var s = new Int8Array(1);
-                    s[0] = ecgBuffer[startIndex+i];
-                    var smp = (s[0] & tmp[0]);
-                    var val = smp-128;
+                    // s[0] = ecgBuffer[startIndex+i];
+                    // s[0] = packet[i];
+                    // var smp = (s[0] & 0xFF);
+                    // var val = smp-128;
+                    var val = packet[i];
                     val = this.mEcgFilter.filter(-val);
                     this.mEcgBuffer.add(val);
                 }

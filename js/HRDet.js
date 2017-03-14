@@ -88,11 +88,11 @@
             var delay = 0;
 
             // Set baseline to 0 and resolution to 5 uV/lsb (200 units/mV)
-            tmp = ecgSample - this.mADCZero;
-            tmp *= 200;
-            tmp /= this.mADCUnit;
-            ecgSample = tmp;
-
+            // tmp = ecgSample - this.mADCZero;
+            // tmp *= 200;
+            // tmp /= this.mADCUnit;
+            // ecgSample = tmp;
+            console.log ('ecgSample: ' + ecgSample);
             if (this.mSampleCount == 0) {
                 this.mQrsDet.init();
             }

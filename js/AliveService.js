@@ -9,10 +9,10 @@
 
         // Initialize UI view
         this.mEcgView = new EcgViewManager();
-        this.mAccView = new AccViewManager();
+        // this.mAccView = new AccViewManager();
         this.mHeartBeat = new HeartBeatManager();
         this.mEcgView.init();
-        this.mAccView.init();
+        // this.mAccView.init();
         this.mHeartBeat.init();
     }
     AliveServiceManager.prototype = {
@@ -27,9 +27,9 @@
             this.mSocket.onmessage = function (evt) {
                 if (evt.data instanceof ArrayBuffer) {
                     var mBytesBuffer = new Int8Array(evt.data);
-                    for (var i = 0; i < mBytesBuffer.length; i++) {
-                      this.run(mBytesBuffer[i]);    
-                    }
+                    //for (var i = 0; i < mBytesBuffer.length; i++) {
+                      this.run(mBytesBuffer);    
+                    //}
                 }
             }.bind(this);
 
@@ -42,36 +42,33 @@
             }.bind(this);
         },
         run(mBytesBuffer) {
-            if(this.hmPacket.add(mBytesBuffer)) {
-                // We have a packet of data from the heart monitor
-                this.mEcgView.onAlivePacket(this.sampleCount, this.hmPacket);
-                this.mAccView.onAlivePacket(this.sampleCount, this.hmPacket);
-
-                // Process the ECG data
-                var len = this.hmPacket.getECGLength();
-                var startIndex = this.hmPacket.getECGDataIndex();
-                var buffer = new Int8Array(this.hmPacket.getPacketData());
-                var tmp = 0xFF;
-                // var tmp = new Int8Array(1); // in nodejs, it won't work
-                // tmp[0] = 0xFF;
-                for(var i = 0; i < len; i++) {
-                    // var nDatum = (buffer[startIndex+i] & tmp[0]);
-                    var nDatum = (buffer[startIndex+i] & tmp);
-                    var nDelay = this.mHRDet.process(nDatum);
-                    if(nDelay!=0) {
-                        // Update the heart-rate in the UI
-                        console.log("Update the heart rate");
-                        this.mHeartBeat.onAliveHeartBeat(
-                            this.sampleCount+i+1-nDelay,
-                            this.mHRDet.getHR(),
-                            this.mHRDet.getLastRR(),
-                            this.mHRDet.getHRV ()
-                        );
-                    }
+            // if(this.hmPacket.add(mBytesBuffer)) {
+            // We have a packet of data from the heart monitor
+            this.mEcgView.onAlivePacket(this.sampleCount, mBytesBuffer);
+            // this.mAccView.onAlivePacket(this.sampleCount, this.hmPacket);
+            
+            // Process the ECG data
+            var len = mBytesBuffer.length;
+            // var tmp = new Int8Array(1); // in nodejs, it won't work
+            // tmp[0] = 0xFF;
+            for(var i = 0; i < len; i++) {
+                // var nDatum = (buffer[startIndex+i] & tmp[0]);
+                var nDelay = this.mHRDet.process(mBytesBuffer[i]);
+                if(nDelay!=0) {
+                    // Update the heart-rate in the UI
+                    console.log("Update the heart rate");
+                    this.mHeartBeat.onAliveHeartBeat(
+                        this.sampleCount+i+1-nDelay,
+                        this.mHRDet.getHR(),
+                        this.mHRDet.getLastRR(),
+                        this.mHRDet.getHRV ()
+                    );
+                    console.log (this.mHRDet.getHRV ().getRRs ());
                 }
-                this.sampleCount += len;
-                console.log("sampleCount = " + this.sampleCount);
             }
+            this.sampleCount += len;
+            // console.log("sampleCount = " + this.sampleCount);
+            // }
         }, 
         stop () {
             this.mSocket.close ();
